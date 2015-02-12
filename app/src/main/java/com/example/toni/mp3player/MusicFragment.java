@@ -7,6 +7,9 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.List;
 
 
 /**
@@ -29,6 +32,9 @@ public class MusicFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    View FragmentView; //Fragment view which help us get objects from fragment layout
+
+    ListView SongListView; //Listview which will store all our songs
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -58,13 +64,19 @@ public class MusicFragment extends android.support.v4.app.Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_music, container, false);
+        FragmentView = inflater.inflate(R.layout.fragment_music, container, false);
+        Song Songs[] = {new Song("Linkin Park", "Numb"), new Song("Breaking Benjamin", "Had Enough"), new Song("Adam Lumbert", "Running")};
+        SongListView = (ListView)FragmentView.findViewById(R.id.ListviewSongs);
+        SongAdapter adapter = new SongAdapter(getActivity(),R.layout.listview_row,Songs);
+        SongListView.setAdapter(adapter);
+        return FragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
