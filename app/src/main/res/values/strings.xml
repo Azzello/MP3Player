@@ -2,10 +2,12 @@
 <resources>
 
     <string name="app_name">MP3Player</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="music_tab">Music</string>
+    <string name="playing_tab">Playing</string>
+    <string name="lyrics_tab">Lyrics</string>
+    <string name="playlist_tab">Playlist</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
