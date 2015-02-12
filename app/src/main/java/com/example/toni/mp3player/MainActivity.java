@@ -88,6 +88,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
     }
+
     //Function which we will use in fragment to get our songs.
     public ArrayList<Song> GetSongs()
     {
