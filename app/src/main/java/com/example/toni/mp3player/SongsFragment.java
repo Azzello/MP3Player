@@ -8,7 +8,9 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -74,10 +76,18 @@ public class SongsFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         FragmentView = inflater.inflate(R.layout.fragment_songs, container, false);
         FragmentView.setBackgroundColor(Color.rgb(0,0,0));//Set background color to black
-        ArrayList<Song> songs = ((MainActivity)getActivity()).GetSongs();
-        ListViewSongs = (ListView)FragmentView.findViewById(R.id.listViewSongs);
-        SongAdapter adapter = new SongAdapter(getActivity(),R.layout.listview_row,songs);
-        ListViewSongs.setAdapter(adapter);
+
+        ArrayList<Song> songs = ((MainActivity)getActivity()).GetSongs();//Get all songs from main activity
+        ListViewSongs = (ListView)FragmentView.findViewById(R.id.listViewSongs);//Declare our listview
+        SongAdapter adapter = new SongAdapter(getActivity(),R.layout.listview_row,songs);//Declare our song adapter for our listview
+        ListViewSongs.setAdapter(adapter);//assign adapter to listview
+        //Set item click listener for our listview
+        ListViewSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((MainActivity)getActivity()).PlaySongAtIndex(position);
+            }
+        });
 
         return FragmentView;
     }

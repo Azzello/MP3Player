@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -41,13 +42,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     ViewPager mViewPager;
 
     ArrayList<Song> Songs;
+    MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Get Songs
         Songs = new ArrayList<Song>();
-        GetSongFiles();
+        GetSongFiles();//Get all songs from device
+
+        mediaPlayer = new MediaPlayer();//Declare our media player
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -87,6 +92,20 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public ArrayList<Song> GetSongs()
     {
         return Songs;
+    }
+    public void PlaySongAtIndex(int songIndex)
+    {
+        Song song = Songs.get(songIndex);
+        try {
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(song.songPath);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        }
+        catch (Exception e)
+        {
+
+        }
     }
     //Function that reads all song files from smarthphone
     private void GetSongFiles(){
