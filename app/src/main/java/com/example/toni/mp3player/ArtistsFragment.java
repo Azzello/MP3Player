@@ -7,20 +7,17 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-
-import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MusicFragment.OnFragmentInteractionListener} interface
+ * {@link ArtistsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MusicFragment#newInstance} factory method to
+ * Use the {@link ArtistsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MusicFragment extends android.support.v4.app.Fragment {
+public class ArtistsFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,20 +29,17 @@ public class MusicFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    View FragmentView; //Fragment view which help us get objects from fragment layout
-
-    ListView SongListView; //Listview which will store all our songs
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MusicFragment.
+     * @return A new instance of fragment ArtistsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MusicFragment newInstance(String param1, String param2) {
-        MusicFragment fragment = new MusicFragment();
+    public static ArtistsFragment newInstance(String param1, String param2) {
+        ArtistsFragment fragment = new ArtistsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -53,7 +47,7 @@ public class MusicFragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
-    public MusicFragment() {
+    public ArtistsFragment() {
         // Required empty public constructor
     }
 
@@ -64,19 +58,13 @@ public class MusicFragment extends android.support.v4.app.Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentView = inflater.inflate(R.layout.fragment_music, container, false);
-        Song Songs[] = {new Song("Linkin Park", "Numb"), new Song("Breaking Benjamin", "Had Enough"), new Song("Adam Lumbert", "Running")};
-        SongListView = (ListView)FragmentView.findViewById(R.id.ListviewSongs);
-        SongAdapter adapter = new SongAdapter(getActivity(),R.layout.listview_row,Songs);
-        SongListView.setAdapter(adapter);
-        return FragmentView;
+        return inflater.inflate(R.layout.fragment_artists, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 /**
  * Created by Toni on 12.2.2015..
  * Song adapter used in our Listview in MusicFragment.java
@@ -17,8 +19,8 @@ import org.w3c.dom.Text;
 public class SongAdapter extends ArrayAdapter<Song>{
     Context context;
     int layoutResourceID;
-    Song SongData[] = null;
-    public SongAdapter(Context context, int layoutResourceID, Song SongData[]) {
+    ArrayList<Song> SongData = null;
+    public SongAdapter(Context context, int layoutResourceID, ArrayList<Song> SongData) {
         super(context, layoutResourceID, SongData);
         this.context  =context;
         this.layoutResourceID = layoutResourceID;
@@ -42,7 +44,7 @@ public class SongAdapter extends ArrayAdapter<Song>{
         {
             holder = (SongHolder)row.getTag();
         }
-        Song song = SongData[position];
+        Song song = SongData.get(position);
 
         holder.songInfo.setText(song.songName);
         holder.artistInfo.setText(song.artistName);

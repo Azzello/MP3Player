@@ -5,12 +5,16 @@ package com.example.toni.mp3player;
  * Song class which will store our songs information
  */
 public class Song {
-    public String songName;
-    public String artistName;
-    public Song(String _songName, String _artistName)
+    String songName;
+    String artistName;
+    String songPath;
+    String songDuration;
+    public Song(String _songName, String _artistName, String _songPath, String _songDuration)
     {
         super();
         songName = _songName;
         artistName = _artistName;
+        songPath = _songPath;
+        songDuration = _songDuration;
     }
 }

@@ -1,23 +1,27 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PlayingFragment.OnFragmentInteractionListener} interface
+ * {@link SongsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PlayingFragment#newInstance} factory method to
+ * Use the {@link SongsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlayingFragment extends android.support.v4.app.Fragment {
+public class SongsFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,6 +31,10 @@ public class PlayingFragment extends android.support.v4.app.Fragment {
     private String mParam1;
     private String mParam2;
 
+    View FragmentView;
+
+    ListView ListViewSongs;
+
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -35,11 +43,11 @@ public class PlayingFragment extends android.support.v4.app.Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PlayingFragment.
+     * @return A new instance of fragment SongsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlayingFragment newInstance(String param1, String param2) {
-        PlayingFragment fragment = new PlayingFragment();
+    public static SongsFragment newInstance(String param1, String param2) {
+        SongsFragment fragment = new SongsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -47,7 +55,7 @@ public class PlayingFragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
-    public PlayingFragment() {
+    public SongsFragment() {
         // Required empty public constructor
     }
 
@@ -64,7 +72,14 @@ public class PlayingFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playing, container, false);
+        FragmentView = inflater.inflate(R.layout.fragment_songs, container, false);
+        FragmentView.setBackgroundColor(Color.rgb(0,0,0));//Set background color to black
+        ArrayList<Song> songs = ((MainActivity)getActivity()).GetSongs();
+        ListViewSongs = (ListView)FragmentView.findViewById(R.id.listViewSongs);
+        SongAdapter adapter = new SongAdapter(getActivity(),R.layout.listview_row,songs);
+        ListViewSongs.setAdapter(adapter);
+
+        return FragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -1,8 +1,11 @@
 package com.example.toni.mp3player;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -20,7 +23,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, MusicFragment.OnFragmentInteractionListener, PlayingFragment.OnFragmentInteractionListener, LyricsFragment.OnFragmentInteractionListener, PlaylistFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, SongsFragment.OnFragmentInteractionListener, ArtistsFragment.OnFragmentInteractionListener, AlbumsFragment.OnFragmentInteractionListener, PlaylistsFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -37,15 +40,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      */
     ViewPager mViewPager;
 
+    ArrayList<Song> Songs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Get Songs
+        Songs = new ArrayList<Song>();
+        GetSongFiles();
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        actionBar.setDisplayShowTitleEnabled(false);//Removes title
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -76,7 +83,50 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
     }
+    //Function which we will use in fragment to get our songs.
+    public ArrayList<Song> GetSongs()
+    {
+        return Songs;
+    }
+    //Function that reads all song files from smarthphone
+    private void GetSongFiles(){
+        Songs.clear();
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        String[] projection = {
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DURATION
+        };
+        final String sortOrder = MediaStore.Audio.AudioColumns.TITLE + " COLLATE LOCALIZED ASC";
 
+        Cursor cursor = null;
+        try {
+            Uri uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            cursor = this.getContentResolver().query(uri, projection, selection, null, sortOrder);
+            if( cursor != null){
+                cursor.moveToFirst();
+                while( !cursor.isAfterLast() ){
+
+                    String title = cursor.getString(0);
+                    String artist = cursor.getString(1);
+                    String path = cursor.getString(2);
+                    String songDuration = cursor.getString(3);
+                    Song tempNewSong = new Song(artist,title,path,songDuration);
+                    Songs.add(tempNewSong);
+                    cursor.moveToNext();
+                }
+
+            }
+
+        } catch (Exception e) {
+
+        }finally{
+            if( cursor != null){
+                cursor.close();
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,6 +170,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     }
 
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -137,13 +188,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch (position)
             {
                 case 0:
-                    return new  MusicFragment();
+                    return new SongsFragment();
                 case 1:
-                    return new PlayingFragment();
+                    return new ArtistsFragment();
                 case 2:
-                    return new LyricsFragment();
+                    return new AlbumsFragment();
                 case 3:
-                    return new PlaylistFragment();
+                    return new PlaylistsFragment();
             }
             return PlaceholderFragment.newInstance(position + 1);
         }
@@ -159,11 +210,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.music_tab).toUpperCase(l);
+                    return getString(R.string.songs_tab).toUpperCase(l);
                 case 1:
-                    return getString(R.string.playing_tab).toUpperCase(l);
+                    return getString(R.string.artists_tab).toUpperCase(l);
                 case 2:
-                    return getString(R.string.lyrics_tab).toUpperCase(l);
+                    return getString(R.string.albums_tab).toUpperCase(l);
                 case 3:
                     return getString(R.string.playlist_tab).toUpperCase(l);
             }
