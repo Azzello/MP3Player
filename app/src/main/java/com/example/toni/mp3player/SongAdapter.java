@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
@@ -36,8 +34,8 @@ public class SongAdapter extends ArrayAdapter<Song>{
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceID,parent,false);
             holder = new SongHolder();
-            holder.songInfo = (TextView)row.findViewById(R.id.textViewSong);
-            holder.artistInfo = (TextView)row.findViewById(R.id.textViewArtist);
+            holder.songInfo = (TextView)row.findViewById(R.id.textViewArtist);
+            holder.artistInfo = (TextView)row.findViewById(R.id.textViewSong);
             row.setTag(holder);
         }
         else

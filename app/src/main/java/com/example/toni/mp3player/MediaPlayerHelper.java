@@ -1,6 +1,7 @@
 package com.example.toni.mp3player;
 
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public  class MediaPlayerHelper{
     static ArrayList<Song> songList;
     static MediaPlayer mediaPlayer;
     static int songIndex;
+    static boolean isMediaPrepared;
 
 
 
@@ -25,18 +27,24 @@ public  class MediaPlayerHelper{
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                songIndex++;
-                PlaySongAtIndex(songIndex);
+                isMediaPrepared = false;
+                PlayNextSong();
             }
         });
-
-
-
+        //Set OnPreparedListener to set our bool to true. This is required for some crash fixes.
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                isMediaPrepared = true;
+            }
+        });
     }
+    //Set media player playlist
     public static void SetPlaylist(ArrayList<Song> _songList)
     {
         songList = _songList;
     }
+    //Plays song at index on current playlist
     public static void PlaySongAtIndex(int _songIndex)
     {
         try {
@@ -51,12 +59,56 @@ public  class MediaPlayerHelper{
             e.printStackTrace();
         }
     }
+    //Plays next song
+    public static void PlayNextSong()
+    {
+        songIndex++;
+        if(songIndex>songList.size()-1)
+        {
+            songIndex = 0;
+        }
+        PlaySongAtIndex(songIndex);
+    }
+    //Previous next song
+    public static void PlayPreviousSong()
+    {
+        songIndex--;
+        if(songIndex<0)
+        {
+            songIndex = songList.size()-1;
+        }
+        PlaySongAtIndex(songIndex);
+    }
+    //Returns current playlist
     public static ArrayList<Song> GetCurrentPlaylist()
     {
         return songList;
     }
+    //Returns currently playing song
     public static Song GetCurrentSong()
     {
         return songList.get(songIndex);
+    }
+    //Returns percentage of song played. This is used when updating seekBar in PlayingActivity
+    public static int GetSeekPercentage()
+    {
+        if(isMediaPrepared)
+        {
+            int songDuration = mediaPlayer.getDuration();
+            int songCurrentPosition = mediaPlayer.getCurrentPosition();
+
+            float currentPositionPercentage = ((float) songCurrentPosition / (float) songDuration) * 100;//Get percentage of duration
+            int finalCurrentPositionPercentage = Math.round(currentPositionPercentage);//Round percentage to int
+            return finalCurrentPositionPercentage;
+        }
+        return 0;
+    }
+    //Sets song position at percentage we give
+    public static void SetSongPositionAtPercentage(int percentage)
+    {
+        int songDuration = mediaPlayer.getDuration();
+        float seekPercentage = (float)percentage/100f;
+        int finalSongPosition = Math.round(seekPercentage*songDuration);
+        mediaPlayer.seekTo(finalSongPosition);
     }
 }

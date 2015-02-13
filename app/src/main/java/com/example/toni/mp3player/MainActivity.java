@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     String artist = cursor.getString(1);//get artist name of song
                     String path = cursor.getString(2);//get song path
                     String songDuration = cursor.getString(3);//get song duration
-                    Song tempNewSong = new Song(artist,title,path,songDuration);
+                    Song tempNewSong = new Song(title,artist,path,songDuration);
                     Songs.add(tempNewSong);
                     cursor.moveToNext();
                 }
