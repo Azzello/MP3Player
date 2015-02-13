@@ -1,5 +1,7 @@
 package com.example.toni.mp3player;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -15,23 +17,12 @@ import java.io.IOException;
 
 
 public class Playing extends ActionBarActivity {
-    MediaPlayer mp3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playing);
-        mp3 = new MediaPlayer();
-        Intent i = getIntent();
-        String Path = i.getExtras().getString("path");
-        Toast.makeText(this,Path,Toast.LENGTH_SHORT).show();
-        try {
-            mp3.reset();
-            mp3.setDataSource(Path);
-            mp3.prepare();
-            mp3.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
 

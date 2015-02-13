@@ -52,7 +52,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         Songs = new ArrayList<Song>();
         GetSongFiles();//Get all songs from device
 
-        mediaPlayer = new MediaPlayer();//Declare our media player
+        MediaPlayerHelper.InitializePlayer();
+        MediaPlayerHelper.SetPlaylist(Songs);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -90,24 +91,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
     //Function which we will use in fragment to get our songs.
-    public ArrayList<Song> GetSongs()
-    {
-        return Songs;
-    }
-    public void PlaySongAtIndex(int songIndex)
-    {
-        Song song = Songs.get(songIndex);
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(song.songPath);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        }
-        catch (Exception e)
-        {
 
-        }
-    }
+
     //Function that reads all song files from smarthphone
     private void GetSongFiles(){
         Songs.clear();
@@ -128,10 +113,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 cursor.moveToFirst();
                 while( !cursor.isAfterLast() ){
 
-                    String title = cursor.getString(0);
-                    String artist = cursor.getString(1);
-                    String path = cursor.getString(2);
-                    String songDuration = cursor.getString(3);
+                    String title = cursor.getString(0);//Get Title of song
+                    String artist = cursor.getString(1);//get artist name of song
+                    String path = cursor.getString(2);//get song path
+                    String songDuration = cursor.getString(3);//get song duration
                     Song tempNewSong = new Song(artist,title,path,songDuration);
                     Songs.add(tempNewSong);
                     cursor.moveToNext();

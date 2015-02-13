@@ -1,6 +1,7 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -78,7 +79,7 @@ public class SongsFragment extends android.support.v4.app.Fragment {
         FragmentView = inflater.inflate(R.layout.fragment_songs, container, false);
         FragmentView.setBackgroundColor(Color.rgb(0,0,0));//Set background color to black
 
-        final ArrayList<Song> songs = ((MainActivity)getActivity()).GetSongs();//Get all songs from main activity
+        ArrayList<Song> songs = MediaPlayerHelper.GetCurrentPlaylist();
         ListViewSongs = (ListView)FragmentView.findViewById(R.id.listViewSongs);//Declare our listview
         SongAdapter adapter = new SongAdapter(getActivity(),R.layout.listview_row,songs);//Declare our song adapter for our listview
         ListViewSongs.setAdapter(adapter);//assign adapter to listview
@@ -86,10 +87,8 @@ public class SongsFragment extends android.support.v4.app.Fragment {
         ListViewSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //((MainActivity)getActivity()).PlaySongAtIndex(position);
+                MediaPlayerHelper.PlaySongAtIndex(position);
                 Intent playingIntent = new Intent(getActivity(),Playing.class);
-                playingIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                playingIntent.putExtra("path",songs.get(position).songPath);
                 startActivity(playingIntent);
             }
         });
