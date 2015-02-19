@@ -1,9 +1,14 @@
 package com.example.toni.mp3player;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -15,6 +20,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -100,8 +106,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         String[] projection = {
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DURATION
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM_ID
+
         };
         final String sortOrder = MediaStore.Audio.AudioColumns.TITLE + " COLLATE LOCALIZED ASC";
 
@@ -115,9 +124,26 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
                     String title = cursor.getString(0);//Get Title of song
                     String artist = cursor.getString(1);//get artist name of song
-                    String path = cursor.getString(2);//get song path
-                    String songDuration = cursor.getString(3);//get song duration
-                    Song tempNewSong = new Song(title,artist,path,songDuration);
+                    String albumName = cursor.getString(2);
+                    String path = cursor.getString(3);//get song path
+                    String songDuration = cursor.getString(4);//get song duration
+                    int albumID = Integer.parseInt(cursor.getString(5));
+
+
+                    //get album art bitmap
+                    Bitmap artwork = null;
+                    try {
+                        Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
+                        Uri ArtUri = ContentUris.withAppendedId(albumArtUri, albumID);
+                        ContentResolver res = getContentResolver();
+                        InputStream in = res.openInputStream(ArtUri);
+                        artwork = BitmapFactory.decodeStream(in);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    Song tempNewSong = new Song(title,artist,albumName,path,songDuration,artwork);
                     Songs.add(tempNewSong);
                     cursor.moveToNext();
                 }
@@ -125,7 +151,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             }
 
         } catch (Exception e) {
-
+            Log.d("AppTag",e.toString());
         }finally{
             if( cursor != null){
                 cursor.close();

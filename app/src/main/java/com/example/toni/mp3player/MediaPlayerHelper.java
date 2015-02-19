@@ -59,6 +59,25 @@ public  class MediaPlayerHelper{
             e.printStackTrace();
         }
     }
+    public static int GetMusicPlayerState()
+    {
+        if(mediaPlayer.isPlaying())
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    public static void PauseSong()
+    {
+        mediaPlayer.pause();
+    }
+    public static void UnpauseSong()
+    {
+        mediaPlayer.start();
+    }
     //Plays next song
     public static void PlayNextSong()
     {

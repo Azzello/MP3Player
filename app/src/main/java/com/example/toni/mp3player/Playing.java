@@ -5,18 +5,32 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class Playing extends ActionBarActivity {
 
+    final int MEDIAPLAYERPLAYING = 1;
+    final int MEDIAPLAYERPAUSED = 0;
+
     boolean activityClosing;
-    SeekBar seekBarSongPosition;
+    boolean seekBarPositionTouched;
     Song currentSong;
+
+    SeekBar seekBarSongPosition;
     TextView textViewSong;
     TextView textViewArtist;
     TextView textViewAlbum;
+    ImageButton imgButtonNextSong;
+    ImageButton imgButtonPreviousSong;
+    ImageButton imgButtonPlayPauseSong;
+    ImageView imgViewAlbumArt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +42,21 @@ public class Playing extends ActionBarActivity {
         textViewArtist = (TextView)findViewById(R.id.textViewSong);
         textViewAlbum = (TextView)findViewById(R.id.textViewAlbum);
         seekBarSongPosition = (SeekBar)findViewById(R.id.seekBarSongPosition);
-
+        imgButtonNextSong = (ImageButton)findViewById(R.id.imageButtonNextSong);
+        imgButtonPreviousSong = (ImageButton)findViewById(R.id.imageButtonPreviousSong);
+        imgButtonPlayPauseSong = (ImageButton)findViewById(R.id.imageButtonPlayPause);
+        imgViewAlbumArt = (ImageView)findViewById(R.id.imageViewAlbumCover);
+        //Check song state and set imgButtonPlayPauseSong button image.
+        if(MediaPlayerHelper.GetMusicPlayerState() == MEDIAPLAYERPLAYING)
+        {
+            imgButtonPlayPauseSong.setImageResource(R.drawable.pauseicon);
+        }
+        else if(MediaPlayerHelper.GetMusicPlayerState() == MEDIAPLAYERPAUSED)
+        {
+            imgButtonPlayPauseSong.setImageResource(R.drawable.playicon);
+        }
+        activityClosing = false;
+        seekBarPositionTouched = false;
         //Set onSeekBarChangeListener which will be used to move through song
         seekBarSongPosition.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -38,19 +66,20 @@ public class Playing extends ActionBarActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                seekBarPositionTouched = true;
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int seekBarPercentage = seekBar.getProgress();
                 MediaPlayerHelper.SetSongPositionAtPercentage(seekBarPercentage);
+                seekBarPositionTouched = false;
             }
         });
 
 
 
-        //Create thread which will update our seekbar every second and get currently playing song.
+        //Create thread which will update our seekBar every second and get currently playing song.
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -64,12 +93,15 @@ public class Playing extends ActionBarActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    UpdateLabels();
+                                    UpdateUI();
                                 }
                             });
                         }
-                        int songPositionPercentage = MediaPlayerHelper.GetSeekPercentage();//Get song position precentage which we will use in our seekBar progress.
-                        seekBarSongPosition.setProgress(songPositionPercentage);
+                        if(!seekBarPositionTouched)
+                        {
+                            int songPositionPercentage = MediaPlayerHelper.GetSeekPercentage();//Get song position percentage which we will use in our seekBar progress.
+                            seekBarSongPosition.setProgress(songPositionPercentage);
+                        }
                         Thread.sleep(1000);//Sleep for 1000ms(1 second) before repeating
                     }
                     catch (InterruptedException e)
@@ -79,12 +111,49 @@ public class Playing extends ActionBarActivity {
                 }
             }
         }).start();
+        //Buttons onClick events
+        imgButtonPlayPauseSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MediaPlayerHelper.GetMusicPlayerState() == MEDIAPLAYERPLAYING)
+                {
+                    MediaPlayerHelper.PauseSong();
+                    imgButtonPlayPauseSong.setImageResource(R.drawable.playicon);
+                }
+                else if(MediaPlayerHelper.GetMusicPlayerState() == MEDIAPLAYERPAUSED)
+                {
+                    MediaPlayerHelper.UnpauseSong();
+                    imgButtonPlayPauseSong.setImageResource(R.drawable.pauseicon);
+                }
+            }
+        });
+        imgButtonNextSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MediaPlayerHelper.PlayNextSong();
+            }
+        });
+        imgButtonPreviousSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MediaPlayerHelper.PlayPreviousSong();
+            }
+        });
     }
     //Update our textviews containing song information.
-    void UpdateLabels()
+    void UpdateUI()
     {
         textViewSong.setText(currentSong.songName);
         textViewArtist.setText(currentSong.artistName);
+        textViewAlbum.setText(currentSong.albumName);
+        if(currentSong.albumArt != null)
+        {
+            imgViewAlbumArt.setImageBitmap(currentSong.albumArt);
+        }
+        else
+        {
+            imgViewAlbumArt.setImageResource(R.drawable.albumcover);
+        }
     }
     @Override
     public void onBackPressed() {
