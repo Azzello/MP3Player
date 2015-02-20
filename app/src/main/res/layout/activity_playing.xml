@@ -40,7 +40,8 @@
         android:text="@string/lyrics"
         android:id="@+id/textViewLyrics"
         android:layout_below="@+id/textViewAlbum"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:clickable="true" />
 
     <TextView
         android:layout_width="wrap_content"

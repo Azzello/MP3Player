@@ -9,6 +9,7 @@ import android.content.ContentUris;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -30,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, SongsFragment.OnFragmentInteractionListener, ArtistsFragment.OnFragmentInteractionListener, AlbumsFragment.OnFragmentInteractionListener, PlaylistsFragment.OnFragmentInteractionListener{
+public class MainActivity extends ActionBarActivity implements  ActionBar.TabListener, SongsFragment.OnFragmentInteractionListener, ArtistsFragment.OnFragmentInteractionListener, AlbumsFragment.OnFragmentInteractionListener, PlaylistsFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -175,6 +176,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 
@@ -200,6 +202,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+
 
 
     /**

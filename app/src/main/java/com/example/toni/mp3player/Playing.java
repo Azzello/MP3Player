@@ -1,5 +1,6 @@
 package com.example.toni.mp3player;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 
 public class Playing extends ActionBarActivity {
@@ -26,6 +29,7 @@ public class Playing extends ActionBarActivity {
     TextView textViewSong;
     TextView textViewArtist;
     TextView textViewAlbum;
+    TextView textViewLyrics;
     ImageButton imgButtonNextSong;
     ImageButton imgButtonPreviousSong;
     ImageButton imgButtonPlayPauseSong;
@@ -41,6 +45,7 @@ public class Playing extends ActionBarActivity {
         textViewSong = (TextView)findViewById(R.id.textViewArtist);
         textViewArtist = (TextView)findViewById(R.id.textViewSong);
         textViewAlbum = (TextView)findViewById(R.id.textViewAlbum);
+        textViewLyrics = (TextView)findViewById(R.id.textViewLyrics);
         seekBarSongPosition = (SeekBar)findViewById(R.id.seekBarSongPosition);
         imgButtonNextSong = (ImageButton)findViewById(R.id.imageButtonNextSong);
         imgButtonPreviousSong = (ImageButton)findViewById(R.id.imageButtonPreviousSong);
@@ -111,6 +116,16 @@ public class Playing extends ActionBarActivity {
                 }
             }
         }).start();
+        //Lyrics click listener
+        textViewLyrics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent lyricsIntent = new Intent(Playing.this,LyricsActivity.class);
+                lyricsIntent.putExtra("Artist Name",currentSong.artistName);
+                lyricsIntent.putExtra("Song Name",currentSong.songName);
+                startActivity(lyricsIntent);
+            }
+        });
         //Buttons onClick events
         imgButtonPlayPauseSong.setOnClickListener(new View.OnClickListener() {
             @Override
