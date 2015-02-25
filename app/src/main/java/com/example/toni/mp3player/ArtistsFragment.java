@@ -1,12 +1,18 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,6 +32,8 @@ public class ArtistsFragment extends android.support.v4.app.Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ListView listViewArtist;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,9 +72,43 @@ public class ArtistsFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_artists, container, false);
+        View FragmentView =  inflater.inflate(R.layout.fragment_artists, container, false);
+        FragmentView.setBackgroundColor(Color.rgb(0,0,0));
+        listViewArtist = (ListView)FragmentView.findViewById(R.id.listViewArtist);
+        ArrayList<Artist> arrayListArtists = getArtistList();
+        ArtistAdapter artistAdapter = new ArtistAdapter(getActivity(),R.layout.listview_row,arrayListArtists);
+        listViewArtist.setAdapter(artistAdapter);
+        return FragmentView;
     }
 
+
+    ArrayList<Artist> getArtistList()
+    {
+        ArrayList<Artist> arrayListArtist = new ArrayList<Artist>();
+        for(int i = 0;i<MediaPlayerHelper.allSongs.size();i++)
+        {
+            boolean artistExists = false;
+            for(int j = 0;j<arrayListArtist.size();j++)
+            {
+
+                if(MediaPlayerHelper.allSongs.get(i).artistName.equals(arrayListArtist.get(j).ArtistName))
+                {
+
+                    artistExists = true;
+                    arrayListArtist.get(j).addSong(MediaPlayerHelper.allSongs.get(i));
+                    break;
+                }
+            }
+            if(!artistExists)
+            {
+                Artist tempArtist = new Artist(MediaPlayerHelper.allSongs.get(i).artistName);
+                tempArtist.addSong(MediaPlayerHelper.allSongs.get(i));
+                arrayListArtist.add(tempArtist);
+            }
+        }
+
+        return arrayListArtist;
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

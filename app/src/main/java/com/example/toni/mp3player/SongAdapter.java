@@ -34,8 +34,8 @@ public class SongAdapter extends ArrayAdapter<Song>{
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceID,parent,false);
             holder = new SongHolder();
-            holder.songInfo = (TextView)row.findViewById(R.id.textViewArtist);
-            holder.artistInfo = (TextView)row.findViewById(R.id.textViewSong);
+            holder.songInfo = (TextView)row.findViewById(R.id.textViewSong);
+            holder.artistInfo = (TextView)row.findViewById(R.id.textViewArtist);
             row.setTag(holder);
         }
         else
@@ -43,9 +43,17 @@ public class SongAdapter extends ArrayAdapter<Song>{
             holder = (SongHolder)row.getTag();
         }
         Song song = SongData.get(position);
+        String songName = song.songName;
+        String artistName = song.artistName;
 
-        holder.songInfo.setText(song.songName);
-        holder.artistInfo.setText(song.artistName);
+        //Check if song or artist name is too long and make it shorter
+        if(songName.length()>36)
+        {
+            songName = songName.substring(0,36);
+            songName +="...";
+        }
+        holder.songInfo.setText(songName);
+        holder.artistInfo.setText(artistName);
         return row;
     }
     static class SongHolder

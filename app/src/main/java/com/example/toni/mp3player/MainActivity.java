@@ -60,6 +60,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.TabLis
         GetSongFiles();//Get all songs from device
 
         MediaPlayerHelper.InitializePlayer();
+        MediaPlayerHelper.allSongs = Songs;
         MediaPlayerHelper.SetPlaylist(Songs);
 
         // Set up the action bar.

@@ -1,12 +1,17 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -26,6 +31,8 @@ public class AlbumsFragment extends android.support.v4.app.Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ListView listViewAlbums;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +71,48 @@ public class AlbumsFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_albums, container, false);
+        View FragmentView = inflater.inflate(R.layout.fragment_albums, container, false);
+        FragmentView.setBackgroundColor(Color.rgb(0,0,0));
+
+        listViewAlbums = (ListView)FragmentView.findViewById(R.id.listViewAlbums);
+
+        ArrayList<Album> albums = getAlbums();
+        AlbumAdapter albumAdapter = new AlbumAdapter(getActivity(),R.layout.listview_row_albums,albums);
+        listViewAlbums.setAdapter(albumAdapter);
+
+        return FragmentView;
+    }
+
+    ArrayList<Album> getAlbums()
+    {
+        ArrayList<Album> arrayListAlbum = new ArrayList<Album>();
+
+        for(int i = 0;i<MediaPlayerHelper.allSongs.size();i++)
+        {
+            boolean albumExists = false;
+            for(int j = 0;j<arrayListAlbum.size();j++)
+            {
+                if(MediaPlayerHelper.allSongs.get(i).albumName.equals(arrayListAlbum.get(j).albumName))
+                {
+                    albumExists = true;
+                    arrayListAlbum.get(j).AddSong(MediaPlayerHelper.allSongs.get(i));
+                    break;
+                }
+            }
+            if(!albumExists)
+            {
+                String albumName = MediaPlayerHelper.allSongs.get(i).albumName;
+                String artistName = MediaPlayerHelper.allSongs.get(i).artistName;
+                Bitmap albumCover = MediaPlayerHelper.allSongs.get(i).albumArt;
+                Album tempAlbum = new Album(albumName,artistName);
+                if(albumCover != null)
+                {
+                    tempAlbum.setCoverImage(albumCover);
+                }
+                arrayListAlbum.add(tempAlbum);
+            }
+        }
+        return arrayListAlbum;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -11,7 +11,8 @@ import java.util.logging.Handler;
  * Created by Toni on 13.2.2015..
  */
 public  class MediaPlayerHelper{
-    static ArrayList<Song> songList;
+    static ArrayList<Song> songList;//current playlist
+    static ArrayList<Song> allSongs;//all songs on device
     static MediaPlayer mediaPlayer;
     static int songIndex;
     static boolean isMediaPrepared;
