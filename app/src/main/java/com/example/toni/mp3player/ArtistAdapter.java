@@ -42,9 +42,15 @@ public class ArtistAdapter extends ArrayAdapter{
             holder = (ArtistHolder)row.getTag();
         }
         Artist artist = ArtistData.get(position);
+        String artistName = artist.ArtistName;
+        if(artistName.length()>34)
+        {
+            artistName = artistName.substring(0,31);
+            artistName+="...";
+        }
 
         holder.songCount.setText(artist.SongCount()+" Song(s)");
-        holder.artistInfo.setText(artist.ArtistName);
+        holder.artistInfo.setText(artistName);
         return row;
     }
     static class ArtistHolder

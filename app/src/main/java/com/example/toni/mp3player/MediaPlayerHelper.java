@@ -13,6 +13,7 @@ import java.util.logging.Handler;
 public  class MediaPlayerHelper{
     static ArrayList<Song> songList;//current playlist
     static ArrayList<Song> allSongs;//all songs on device
+    static ArrayList<Song> clickedList;//used to pass playlist to another activity
     static MediaPlayer mediaPlayer;
     static int songIndex;
     static boolean isMediaPrepared;

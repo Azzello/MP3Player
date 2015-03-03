@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,7 @@ public class SongsFragment extends android.support.v4.app.Fragment {
         ListViewSongs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MediaPlayerHelper.SetPlaylist(MediaPlayerHelper.allSongs);
                 MediaPlayerHelper.PlaySongAtIndex(position);
                 Intent playingIntent = new Intent(getActivity(),Playing.class);
                 startActivity(playingIntent);

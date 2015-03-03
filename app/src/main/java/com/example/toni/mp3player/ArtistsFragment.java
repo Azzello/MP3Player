@@ -1,6 +1,7 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class ArtistsFragment extends android.support.v4.app.Fragment {
     private String mParam2;
 
     ListView listViewArtist;
+    ArrayList<Artist> arrayListArtists;
 
     private OnFragmentInteractionListener mListener;
 
@@ -75,9 +78,18 @@ public class ArtistsFragment extends android.support.v4.app.Fragment {
         View FragmentView =  inflater.inflate(R.layout.fragment_artists, container, false);
         FragmentView.setBackgroundColor(Color.rgb(0,0,0));
         listViewArtist = (ListView)FragmentView.findViewById(R.id.listViewArtist);
-        ArrayList<Artist> arrayListArtists = getArtistList();
+        arrayListArtists = getArtistList();
         ArtistAdapter artistAdapter = new ArtistAdapter(getActivity(),R.layout.listview_row,arrayListArtists);
         listViewArtist.setAdapter(artistAdapter);
+        //set on item click listener for listview
+        listViewArtist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MediaPlayerHelper.clickedList = arrayListArtists.get(position).Songs;
+                Intent i = new Intent(getActivity(),PlaylistSongs.class);
+                startActivity(i);
+            }
+        });
         return FragmentView;
     }
 

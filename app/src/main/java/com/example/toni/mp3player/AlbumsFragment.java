@@ -1,14 +1,17 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ public class AlbumsFragment extends android.support.v4.app.Fragment {
     private String mParam2;
 
     ListView listViewAlbums;
-
+    ArrayList<Album> albums;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -76,13 +79,22 @@ public class AlbumsFragment extends android.support.v4.app.Fragment {
 
         listViewAlbums = (ListView)FragmentView.findViewById(R.id.listViewAlbums);
 
-        ArrayList<Album> albums = getAlbums();
+        albums = getAlbums();
         AlbumAdapter albumAdapter = new AlbumAdapter(getActivity(),R.layout.listview_row_albums,albums);
         listViewAlbums.setAdapter(albumAdapter);
 
+        //set listener for listview
+        listViewAlbums.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MediaPlayerHelper.clickedList = albums.get(position).songs;
+                Log.d("AppTag",albums.get(position).songs.size()+"");
+                Intent i = new Intent(getActivity(),PlaylistSongs.class);
+                startActivity(i);
+            }
+        });
         return FragmentView;
     }
-
     ArrayList<Album> getAlbums()
     {
         ArrayList<Album> arrayListAlbum = new ArrayList<Album>();
@@ -109,6 +121,7 @@ public class AlbumsFragment extends android.support.v4.app.Fragment {
                 {
                     tempAlbum.setCoverImage(albumCover);
                 }
+                tempAlbum.AddSong(MediaPlayerHelper.allSongs.get(i));
                 arrayListAlbum.add(tempAlbum);
             }
         }

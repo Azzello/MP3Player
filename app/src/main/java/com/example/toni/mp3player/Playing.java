@@ -158,9 +158,28 @@ public class Playing extends ActionBarActivity {
     //Update our textviews containing song information.
     void UpdateUI()
     {
-        textViewSong.setText(currentSong.songName);
-        textViewArtist.setText(currentSong.artistName);
-        textViewAlbum.setText(currentSong.albumName);
+        String songName = currentSong.songName;
+        String artistName = currentSong.artistName;
+        String albumName = currentSong.albumName;
+
+        if(songName.length() > 27)
+        {
+            songName = songName.substring(0,24);
+            songName+="...";
+        }
+        if(artistName.length() > 27)
+        {
+            artistName = artistName.substring(0,24);
+            artistName+="...";
+        }
+        if(albumName.length() > 27)
+        {
+            albumName = albumName.substring(0,24);
+            albumName+="...";
+        }
+        textViewSong.setText(songName);
+        textViewArtist.setText(artistName);
+        textViewAlbum.setText(albumName);
         if(currentSong.albumArt != null)
         {
             imgViewAlbumArt.setImageBitmap(currentSong.albumArt);

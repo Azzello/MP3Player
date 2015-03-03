@@ -48,9 +48,19 @@ public class AlbumAdapter extends ArrayAdapter{
         String albumName = album.albumName;
         String artistName = album.artistName;
 
-
+        if(albumName.length()>31)
+        {
+            albumName = albumName.substring(0,28);
+            albumName+="...";
+        }
+        if(artistName.length()>36)
+        {
+            artistName = artistName.substring(0,33);
+            artistName+="...";
+        }
         holder.albumInfo.setText(albumName);
         holder.artistInfo.setText(artistName);
+        //Check if coverImage exists for this album. Without this random images will appear on cover.
         if(album.coverImage != null)
         {
             holder.albumCover.setImageBitmap(album.coverImage);

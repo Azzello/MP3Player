@@ -52,6 +52,11 @@ public class SongAdapter extends ArrayAdapter<Song>{
             songName = songName.substring(0,36);
             songName +="...";
         }
+        if(artistName.length()>36)
+        {
+            artistName = artistName.substring(0,36);
+            artistName +="...";
+        }
         holder.songInfo.setText(songName);
         holder.artistInfo.setText(artistName);
         return row;

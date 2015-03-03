@@ -16,5 +16,6 @@
     <string name="album_name">Album Name</string>
     <string name="lyrics">Lyrics</string>
     <string name="title_activity_lyrics">Lyrics</string>
+    <string name="title_activity_playlist_songs">PlaylistSongs</string>
 
 </resources>
