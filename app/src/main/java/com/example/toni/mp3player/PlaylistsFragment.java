@@ -1,12 +1,27 @@
 package com.example.toni.mp3player;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 
 /**
@@ -26,6 +41,11 @@ public class PlaylistsFragment extends android.support.v4.app.Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Button buttonNewPlaylist;
+    ListView listViewPlaylists;
+    ArrayList<Playlist> listPlaylist;
+    PlaylistAdapter playlistAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,9 +84,122 @@ public class PlaylistsFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlists, container, false);
-    }
+        View FragmentView = inflater.inflate(R.layout.fragment_playlists, container, false);
+        buttonNewPlaylist = (Button)FragmentView.findViewById(R.id.buttonNewPlaylist);
+        listViewPlaylists = (ListView)FragmentView.findViewById(R.id.listViewPlaylists);
 
+        buttonNewPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(),PlaylistMaker.class);
+                startActivityForResult(intent,1);
+            }
+        });
+        listPlaylist=  readPlaylistsFromFile();
+        playlistAdapter = new PlaylistAdapter(getActivity(),R.layout.listview_row,listPlaylist);
+        listViewPlaylists.setAdapter(playlistAdapter);
+        listViewPlaylists.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MediaPlayerHelper.clickedList = listPlaylist.get(position).playlistSongs;
+                Intent i = new Intent(getActivity(),PlaylistSongs.class);
+                startActivity(i);
+            }
+        });
+        return FragmentView;
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == 1)
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"New playlist has been added.",Toast.LENGTH_SHORT).show();
+                listPlaylist = readPlaylistsFromFile();
+                playlistAdapter.clear();
+                playlistAdapter.addAll(listPlaylist);
+                playlistAdapter.notifyDataSetChanged();
+            }
+            else
+            {
+                Toast.makeText(getActivity().getApplicationContext(),"Playlist Maker Canceled.",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private ArrayList<Playlist> readPlaylistsFromFile() {
+        ArrayList<Playlist> playlists = new ArrayList<Playlist>();
+        Playlist tempPlaylist=new Playlist("");
+        String songName="";
+        String albumName="";
+        String artistName="";
+        String playlistName="";
+        String ret = "";
+        try {
+
+            InputStream inputStream = getActivity().openFileInput("playlists.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                    if(receiveString.contains("<-StartPlaylist:"))//New playlist
+                    {
+                        int startIndex = receiveString.indexOf("<-StartPlaylist:") + 16;
+                        int endIndex = receiveString.indexOf("->");
+                        Log.d("AppTag", startIndex + " " + endIndex + " " + (endIndex-startIndex));
+                        playlistName = receiveString.substring(startIndex,endIndex);
+                        tempPlaylist = new Playlist(playlistName);
+
+                    }
+                    else if (receiveString.contains("<-EndPlaylist:"))//End of playlist
+                    {
+                        playlists.add(tempPlaylist);
+                    }
+                    else//Songs
+                    {
+                        int startIndex = 0;
+                        int endIndex = receiveString.indexOf("<||>");
+                        artistName = receiveString.substring(startIndex, endIndex);
+                        startIndex = endIndex+4;
+                        endIndex = receiveString.indexOf("<||>",startIndex);
+                        songName = receiveString.substring(startIndex,endIndex);
+                        startIndex = endIndex+4;
+                        endIndex = receiveString.indexOf("<||>",startIndex);
+                        albumName = receiveString.substring(startIndex,endIndex);
+                        Song tempSong = getSongFromAll(songName,artistName,albumName);
+                        if(tempSong != null)
+                        {
+                            tempPlaylist.AddSong(tempSong);
+                        }
+                    }
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+        return playlists;
+    }
+    Song getSongFromAll(String songName, String artistName, String albumName)
+    {
+        for(int i =0;i<MediaPlayerHelper.allSongs.size();i++)
+        {
+            Song currentSong = MediaPlayerHelper.allSongs.get(i);
+            if(currentSong.songName.equals(songName) && currentSong.artistName.equals(artistName) && currentSong.albumName.equals(albumName))
+            {
+                return currentSong;
+            }
+        }
+        return null;
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

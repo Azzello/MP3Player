@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.toni.mp3player.LyricsActivity"
-    android:background="#ff000000">
+    android:background="#051C38">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,7 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Artist Name"
         android:id="@+id/textViewArtistName"
-        android:textColor="#ffffffff"
+        android:textColor="#FFFFFF"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -23,7 +23,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Song Name"
         android:id="@+id/textViewSongName"
-        android:textColor="#ffffffff"
+        android:textColor="#FFFFFF"
         android:layout_below="@+id/textViewArtistName"
         android:layout_centerHorizontal="true" />
 
@@ -37,5 +37,5 @@
         android:layout_below="@+id/textViewSongName"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
-        android:textColor="#ffffffff" />
+        android:textColor="#FFFFFF" />
 </RelativeLayout>

@@ -31,6 +31,10 @@
             android:name=".PlaylistSongs"
             android:label="@string/title_activity_playlist_songs" >
         </activity>
+        <activity
+            android:name=".PlaylistMaker"
+            android:label="@string/title_activity_playlist_maker" >
+        </activity>
     </application>
 
 </manifest>

@@ -75,7 +75,7 @@ public class AlbumsFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View FragmentView = inflater.inflate(R.layout.fragment_albums, container, false);
-        FragmentView.setBackgroundColor(Color.rgb(0,0,0));
+        //FragmentView.setBackgroundColor(Color.rgb(0,0,0));
 
         listViewAlbums = (ListView)FragmentView.findViewById(R.id.listViewAlbums);
 

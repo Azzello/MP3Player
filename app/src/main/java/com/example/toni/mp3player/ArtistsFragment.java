@@ -76,7 +76,7 @@ public class ArtistsFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View FragmentView =  inflater.inflate(R.layout.fragment_artists, container, false);
-        FragmentView.setBackgroundColor(Color.rgb(0,0,0));
+        //FragmentView.setBackgroundColor(Color.rgb(0,0,0));
         listViewArtist = (ListView)FragmentView.findViewById(R.id.listViewArtist);
         arrayListArtists = getArtistList();
         ArtistAdapter artistAdapter = new ArtistAdapter(getActivity(),R.layout.listview_row,arrayListArtists);

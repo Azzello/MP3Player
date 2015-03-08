@@ -78,7 +78,7 @@ public class SongsFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         FragmentView = inflater.inflate(R.layout.fragment_songs, container, false);
-        FragmentView.setBackgroundColor(Color.rgb(0,0,0));//Set background color to black
+        //FragmentView.setBackgroundColor(Color.rgb(0,0,0));//Set background color to black
 
         ArrayList<Song> songs = MediaPlayerHelper.GetCurrentPlaylist();
         ListViewSongs = (ListView)FragmentView.findViewById(R.id.listViewSongs);//Declare our listview

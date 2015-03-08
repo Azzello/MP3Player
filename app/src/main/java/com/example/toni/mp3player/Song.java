@@ -13,6 +13,7 @@ public class Song {
     String songPath;
     String songDuration;
     Bitmap albumArt;
+    Boolean checked; //Used for playlist maker
     public Song(String _songName, String _artistName,String _albumName,String _songPath, String _songDuration, Bitmap _albumArt)
     {
         super();
@@ -22,5 +23,6 @@ public class Song {
         songPath = _songPath;
         songDuration = _songDuration;
         albumArt = _albumArt;
+        checked = false;
     }
 }

@@ -55,6 +55,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.TabLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //Get Songs
         Songs = new ArrayList<Song>();
         GetSongFiles();//Get all songs from device
@@ -65,6 +66,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.TabLis
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);//Removes title
         // Create the adapter that will return a fragment for each of the three
