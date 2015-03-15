@@ -9,7 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/new_playlist"
         android:id="@+id/buttonNewPlaylist"
         android:layout_gravity="left|bottom"
         android:layout_alignParentBottom="true"

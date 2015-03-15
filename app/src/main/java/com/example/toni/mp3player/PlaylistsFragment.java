@@ -7,13 +7,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -21,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 
@@ -106,7 +110,21 @@ public class PlaylistsFragment extends android.support.v4.app.Fragment {
                 startActivity(i);
             }
         });
+        registerForContextMenu(listViewPlaylists);
         return FragmentView;
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId() == R.id.listViewPlaylists) {
+            menu.add("Delete Playlist");
+        }
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        DeletePlaylist(listPlaylist.get(info.position).playlistName);
+        UpdatePlaylists();
+        return true;
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -114,16 +132,68 @@ public class PlaylistsFragment extends android.support.v4.app.Fragment {
             if(resultCode == 1)
             {
                 Toast.makeText(getActivity().getApplicationContext(),"New playlist has been added.",Toast.LENGTH_SHORT).show();
-                listPlaylist = readPlaylistsFromFile();
-                playlistAdapter.clear();
-                playlistAdapter.addAll(listPlaylist);
-                playlistAdapter.notifyDataSetChanged();
+                UpdatePlaylists();
             }
             else
             {
                 Toast.makeText(getActivity().getApplicationContext(),"Playlist Maker Canceled.",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    void UpdatePlaylists()
+    {
+        listPlaylist = readPlaylistsFromFile();
+        playlistAdapter.clear();
+        playlistAdapter.addAll(listPlaylist);
+        playlistAdapter.notifyDataSetChanged();
+    }
+    void DeletePlaylist(String playlistName)
+    {
+        String ret = "";
+
+        try {
+            InputStream inputStream = getActivity().openFileInput("playlists.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString+"\n");
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+        int startIndex = -1;
+        int endIndex = -1;
+
+        startIndex = ret.indexOf("<-StartPlaylist:" + playlistName);
+        endIndex = ret.indexOf("<-EndPlaylist:" + playlistName) + 17 + playlistName.length();
+        if(startIndex > -1 && endIndex > -1) {
+            String deletedPlaylist = ret.substring(startIndex, endIndex);
+
+            ret = ret.replace(deletedPlaylist,"");//Delete playlist from string then write it in file.
+        }
+
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getActivity().openFileOutput("playlists.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(ret);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+
     }
     private ArrayList<Playlist> readPlaylistsFromFile() {
         ArrayList<Playlist> playlists = new ArrayList<Playlist>();
@@ -149,7 +219,6 @@ public class PlaylistsFragment extends android.support.v4.app.Fragment {
                     {
                         int startIndex = receiveString.indexOf("<-StartPlaylist:") + 16;
                         int endIndex = receiveString.indexOf("->");
-                        Log.d("AppTag", startIndex + " " + endIndex + " " + (endIndex-startIndex));
                         playlistName = receiveString.substring(startIndex,endIndex);
                         tempPlaylist = new Playlist(playlistName);
 
