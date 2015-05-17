@@ -88,6 +88,7 @@ public  class MediaPlayerHelper{
         {
             songIndex = 0;
         }
+        isMediaPrepared = false;
         PlaySongAtIndex(songIndex);
     }
     //Previous next song
@@ -98,6 +99,7 @@ public  class MediaPlayerHelper{
         {
             songIndex = songList.size()-1;
         }
+        isMediaPrepared = false;
         PlaySongAtIndex(songIndex);
     }
     //Returns current playlist
